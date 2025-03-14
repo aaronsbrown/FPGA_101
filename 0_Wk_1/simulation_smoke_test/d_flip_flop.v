@@ -7,6 +7,6 @@ module d_flip_flop(
     initial q = 0;
 
     always @(posedge clk) begin
-        q = d;
+        q <= d;
     end
 endmodule
