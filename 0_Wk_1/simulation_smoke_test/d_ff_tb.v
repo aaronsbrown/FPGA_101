@@ -1,11 +1,12 @@
 `timescale 1ns/1ps
-`include "d_flip_flop.v"
+`include "../simulation_smoke_test/d_ff.v"
 
-module d_flip_flop_tb;
+
+module d_ff_tb;
     reg clk, reset, d;
     wire q;
 
-    d_flip_flop uut (
+    d_ff uut (
         .clk(clk),
         .reset(reset),
         .d(d),
@@ -29,7 +30,7 @@ module d_flip_flop_tb;
 
 
         $dumpfile("waveform_data_flip_flop.vcd");
-        $dumpvars(0, d_flip_flop_tb);
+        $dumpvars(0, d_ff_tb);
         
         d = 0; #10;
         d = 1; #10;
