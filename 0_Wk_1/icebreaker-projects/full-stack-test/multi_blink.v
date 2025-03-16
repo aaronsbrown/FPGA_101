@@ -1,4 +1,4 @@
-module blinky (
+module multi_blink (
     input clk,   // Input clock
     output reg [7:0] led  // 8 LEDs to blink
 );

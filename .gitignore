@@ -1,1 +1,8 @@
 .DS_Store
+*.log
+*.asc
+*.bin
+hardware.json
+*.dblite
+*.vvp
+*.vcd

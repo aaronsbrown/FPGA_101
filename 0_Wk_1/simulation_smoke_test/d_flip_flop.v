@@ -1,12 +1,15 @@
 module d_flip_flop(
     input clk,
+    input reset,
     input d,
     output reg q
 );
 
-    initial q = 0;
-
-    always @(posedge clk) begin
-        q <= d;
+    always @(posedge clk or posedge reset) begin
+        if (reset) begin
+           q <= 0; 
+        end else begin
+            q <= d;
+        end
     end
 endmodule
