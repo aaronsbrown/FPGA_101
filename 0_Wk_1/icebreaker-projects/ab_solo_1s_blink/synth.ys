@@ -1,0 +1,8 @@
+# Read in your Verilog source files.
+read_verilog d_ff.v ab_solo_1s_blink.v
+
+# Set the top-level module.
+hierarchy -check -top ab_solo_1s_blink
+
+# Synthesize for the iCE40 FPGA.
+synth_ice40 -top ab_solo_1s_blink -json top.json
