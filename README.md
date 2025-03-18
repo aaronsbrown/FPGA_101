@@ -1,125 +1,83 @@
-# FPGA 101 - Learning and Experimentation
+# 🚀 FPGA 101: Structured Learning for FPGA Development
 
-Welcome to **FPGA 101**, a structured learning repository designed to guide you through FPGA development, from **early explorations** to **fully structured projects**. This repository contains hands-on experiments, structured FPGA projects, simulation environments, and documentation to help you progress from **basic digital logic** to **advanced FPGA-based generative music systems**.
+Welcome to **FPGA 101**, a structured learning curriculum designed to teach **FPGA programming and digital logic** through hands-on projects. This repository organizes projects into **thematic chapters**, covering everything from **basic digital circuits** to **generative music synthesis on an FPGA**.
 
 ---
 
-## 📁 Repository Structure
+## 📌 Project Structure
 
 ```
 FPGA_101/
-├── README.md            # Top-level README explaining the structured learning plan
-├── structured_fpga/     # New structured approach to FPGA projects
-│   ├── README.md
-│   ├── common/          # Shared Verilog modules + constraints
-│   ├── docs/            # Documentation, setup guides
-│   ├── projects/        # Individual structured FPGA projects
-│   ├── simulation_tests/ # Sandbox for controlled FPGA simulations
-│   └── tools/           # Build & simulation scripts
-│
-├── exploratory_fpga/    # Older explorations & initial FPGA experiments
-│   ├── README.md
-│   ├── icebreaker-projects/ # Initial FPGA experiments
-│   ├── simulation_smoke_test/ # Early testbenches & logic simulations
-│   └── tools/           # Older scripts that may still be useful
-│
-└── curriculum/          # Structured learning materials
-    ├── README.md
-    ├── week_01_intro.md
-    ├── week_02_bus_edge_detection.md
-    ├── week_03_clock_division.md
-    └── (etc...)
+├── README.md                   # This file
+├── common/                     # Shared Verilog modules & constraints
+│   ├── constraints/            # Global pin constraint files
+│   └── modules/                # Common reusable Verilog modules
+├── docs/                       # Learning materials and guides
+├── projects/                   # Hands-on FPGA projects (organized by chapter)
+│   ├── ch1_basics/             # Digital logic fundamentals
+│   ├── ch2_clocking/           # Clock division & timing
+│   ├── ch3_interfacing/        # External device interfacing
+│   ├── ch4_generative_music/   # Algorithmic rhythm & melody generation
+│   ├── ch5_midi_sync/          # MIDI integration & DAW synchronization
+│   ├── ch6_final_project/      # A fully functional FPGA-based music system
+├── sim_tests/                  # General simulation tests for FPGA logic
+└── tools/                      # Utility scripts for project automation
 ```
 
 ---
 
-## 🏗️ Learning Progression
+## 📖 FPGA Curriculum Overview
 
-This repository is structured into two phases:
+This curriculum is divided into **6 progressive chapters**, each covering essential FPGA topics through hands-on projects.
 
-1️⃣ **Exploratory FPGA Work (`exploratory_fpga/`)**  
-   - Early experiments with Verilog and FPGA development.
-   - Includes simple LED blinking, combinational logic, and basic simulations.
-   - Contains raw test files, initial tools, and quick Verilog scripts.
+### **🔹 Chapter 1: Basics**
+- **Combinational Logic** (AND, OR, XOR, Multiplexers)
+- **Sequential Logic** (Flip-flops, Counters, Registers)
+- **LED Control** (Blinking LEDs, Sequential Patterns)
+- 📂 **Projects:** `combinational_logic/`, `flip_flops/`, `sequential_logic/`
 
-2️⃣ **Structured FPGA Projects (`structured_fpga/`)**  
-   - Organized weekly learning curriculum.
-   - Contains fully built projects, modular Verilog components, and structured synthesis workflows.
-   - Designed for **FPGA music generation, synthesis, and real-time control applications**.
+### **🔹 Chapter 2: Clocking & Timing**
+- **Clock Division & Frequency Scaling**
+- **Counters & Timing Signals**
+- **Generating BPM-based Pulses**
+- 📂 **Projects:** `clock_divider/`, `bpm_pulse_generator/`, `counter_4bit/`
 
-### 📆 Weekly FPGA Curriculum
+### **🔹 Chapter 3: Interfacing**
+- **Reading Data from an 8-bit Bus**
+- **Interfacing with DAC for Analog Output**
+- **Processing MIDI Input on FPGA**
+- 📂 **Projects:** `bus_edge_detection/`, `dac_interface/`, `midi_interface/`
 
-| Week | Topics Covered |
-|------|--------------------------------------------------------|
-| 1    | **FPGA Basics & Verilog Introduction**: Toolchain setup, LED blinking, combinational logic |
-| 2    | **8-bit Bus & Edge Detection**: Connecting an FPGA to an 8-bit computer bus, level shifting |
-| 3    | **Clock Division & Timing Control**: Generating pulse signals (8th notes, quarter notes) |
-| 4    | **Interfacing with MCP4822 DAC (CV Output)**: Sending digital data to a DAC for synth control |
-| 5    | **Generating Rhythms with FPGA Logic**: Implementing LFSRs, XOR techniques for rhythm patterns |
-| 6    | **Adding MIDI Support via Teensy**: Sending FPGA triggers as USB-MIDI signals |
-| 7    | **Building a Basic Sequencer**: FPGA-driven note patterns, duration, pitch, velocity control |
-| 8    | **Scale Quantization for Melodies**: Converting raw CV/MIDI data into scale-constrained notes |
-| 9    | **Syncing FPGA Rhythms with DAW via MIDI Clock**: Ensuring FPGA sequences match DAW BPM |
-| 10+  | **Final Project - Hybrid FPGA-Teensy Generative Synth**: Bringing everything together! |
+### **🔹 Chapter 4: Generative Music**
+- **Rhythm Generation Using LFSRs**
+- **Step Sequencing & Note Generation**
+- **Scale Quantization for Melodies**
+- 📂 **Projects:** `lfsr_rhythm_gen/`, `sequencer_fpga/`, `quantizer/`
 
----
+### **🔹 Chapter 5: MIDI Synchronization**
+- **Reading External MIDI Clock**
+- **Synchronizing FPGA Sequences with a DAW**
+- 📂 **Projects:** `midi_clock_reader/`, `fpga_daw_sync/`
 
-## 🚀 Getting Started
-
-### 1️⃣ Install Required FPGA Tools
-Ensure you have **Yosys, nextpnr, IceStorm, Icarus Verilog, GTKWave**, and **VSCode** installed.
-
-```bash
-# Verify installation
-yosys -V
-nextpnr-ice40 --version
-iverilog -V
-gtkwave --version
-```
-
-For full setup instructions, check the [FPGA Development Environment Guide](https://github.com/YOUR_GITHUB_USERNAME/FPGA_101/wiki/FPGA-Development-Environment).
-
-### 2️⃣ Clone This Repository
-
-```bash
-git clone https://github.com/YOUR_GITHUB_USERNAME/FPGA_101.git
-cd FPGA_101
-```
-
-### 3️⃣ Build & Simulate a Project
-
-Navigate to a structured FPGA project folder and build:
-
-```bash
-cd structured_fpga/projects/0_4bit_counter
-../../tools/build.sh --verbose src/top.v --top fpga_counter_top
-```
-
-Run a simulation for a **common module**:
-
-```bash
-./tools/simulate_common.sh --verbose --tb fpga_counter_top_tb.v
-```
-
-### 4️⃣ View Waveform Output
-
-Open the resulting **waveform.vcd** file in GTKWave:
-
-```bash
-gtkwave structured_fpga/simulation_tests/build/waveform.vcd
-```
+### **🔹 Chapter 6: Final Project**
+- **Building a Hybrid FPGA-Teensy Synth**
+- **Eurorack Integration & Performance Optimization**
+- 📂 **Projects:** `hybrid_fpga_teensy_synth/`, `eurorack_integration/`
 
 ---
 
-## 💡 Contributing & Expanding
+## 🛠 FPGA Project Tools
 
-This repository is meant to grow as you progress! Feel free to:
-- Add new **Verilog modules** or **FPGA experiments**.
-- Improve **documentation** and share findings.
-- Suggest **new generative music techniques** using FPGA logic.
+This repository contains automation scripts in the [`tools/`](tools/) folder:
 
-For structured contributions, check the [Contributing Guide](./docs/contributing.md).
+| Script | Purpose |
+|--------|---------|
+| `init_project.sh` | Create a new project using a structured template |
+| `build.sh` | Automates FPGA synthesis and flashing |
+| `simulate_common.sh` | Runs testbenches for common FPGA modules |
 
-🚀 **Happy learning, building, and making music with FPGAs!** 🎵
-""
+To create a new project, use:
+```sh
+./tools/init_project.sh --name <project_name> --location <chapter_folder>
+```
 
