@@ -6,7 +6,7 @@ module fpga_counter_top (
     output  wire    [7:0] led
 );
 
-    parameter N = 8;
+    parameter N = 3;
 
     wire [N-1:0] q;
     wire div_clk;
