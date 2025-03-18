@@ -48,8 +48,7 @@ module register_nb_tb;
 
         // Apply stimulus aligned with clock edges:
         @(posedge clk);
-        d = 8'hEF;        
-
+        d = 8'h01;         
 
         // Test reasserting reset mid-operation:
         repeat(2) @(posedge clk);
