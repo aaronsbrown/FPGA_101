@@ -15,7 +15,7 @@ module clock_divider_tb;
     
     initial begin
         
-        $dumpfile("waveform_clock_divider.vcd");
+        $dumpfile("waveform.vcd");
         $dumpvars(0, clock_divider_tb);
 
         $monitor( "Time =%0t | clk_in=%b | reset=%b | clk_out=%b", $time, clk, reset, clk_out);

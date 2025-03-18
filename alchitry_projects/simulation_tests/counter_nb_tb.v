@@ -18,7 +18,7 @@ module counter_nb_tb;
     
     initial begin
         
-        $dumpfile("waveform_counter_nbit.vcd");
+        $dumpfile("waveform.vcd");
         $dumpvars(0, counter_nb_tb);
 
         $monitor( "Time =%0t | clk=%b | reset=%b | q=%4b", $time, clk, reset, q);
