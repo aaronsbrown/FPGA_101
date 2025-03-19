@@ -1,5 +1,6 @@
 #!/bin/bash
 set -e  # Exit on any error
+set -o pipefail
 
 # --- Configuration & Logging ---
 RED='\033[0;31m'
@@ -16,6 +17,17 @@ log_error()   { echo -e "${RED}[$(date +"%T")] ERROR:${NC} $1" >&2; }
 usage() {
     echo "Usage: $0 [--verbose|-v] path/to/verilog_file.v ... --top top_module_name [--simulate] [--tb testbench_file.v]"
     exit 1
+}
+
+# --- Helper function to run commands with optional verbose logging ---
+run_cmd() {
+    local log_file="$1"
+    shift
+    if [ "$VERBOSE" = true ]; then
+        "$@" 2>&1 | tee "$log_file"
+    else
+        "$@" > "$log_file" 2>&1
+    fi
 }
 
 # --- Parse Arguments ---
@@ -103,10 +115,10 @@ mkdir -p "$LOG_DIR"
 
 # --- Automatically Include Common Modules ---
 # From the project directory, common modules are located at ../../common/modules.
-COMMON_MODULES_DIR="$(cd "$PROJECT_DIR/../../common/modules" && pwd)"
+COMMON_MODULES_DIR="$(cd "$PROJECT_DIR/../../../common/modules" && pwd)"
 if [ -d "$COMMON_MODULES_DIR" ]; then
     log_info "Searching for common modules in $COMMON_MODULES_DIR..."
-    COMMON_MODULE_FILES=($(find "$COMMON_MODULES_DIR" -maxdepth 1 -type f -name "*.v" 2>/dev/null))
+    COMMON_MODULE_FILES=($(find "$COMMON_MODULES_DIR" -maxdepth 1 -type f \( -name "*.v" -o -name "*.sv" \) 2>/dev/null))
     if [ ${#COMMON_MODULE_FILES[@]} -gt 0 ]; then
         for file in "${COMMON_MODULE_FILES[@]}"; do
             abs_file="$(get_abs "$file")"
@@ -124,7 +136,7 @@ fi
 # Project-specific constraints are in PROJECT_DIR/constraints.
 # Common constraints are located at ../../common/constraints relative to the project directory.
 PROJECT_CONSTRAINT_DIR="$PROJECT_DIR/constraints"
-COMMON_CONSTRAINT_DIR="$(cd "$PROJECT_DIR/../../common/constraints" && pwd)"
+COMMON_CONSTRAINT_DIR="$(cd "$PROJECT_DIR/../../../common/constraints" && pwd)"
 MERGED_PCF="$BUILD_DIR/merged_constraints.pcf"
 
 COMMON_PCF_FILES=( $(find "$COMMON_CONSTRAINT_DIR" -maxdepth 1 -type f -name "*.pcf" 2>/dev/null) )
@@ -191,19 +203,19 @@ if [ "$SIMULATE" = true ]; then
     fi
 
     # Compile simulation sources with iverilog.
-    IVERILOG_CMD=(iverilog -o "$SIM_VVP" "${ABS_VERILOG_FILES[@]}")
+    IVERILOG_CMD=(iverilog -g2012 -o "$SIM_VVP" "${ABS_VERILOG_FILES[@]}")
     [ "$VERBOSE" = true ] && log_debug "Iverilog command: ${IVERILOG_CMD[*]}"
-    if "${IVERILOG_CMD[@]}" > "$LOG_DIR/iverilog.log" 2>&1; then
+    if run_cmd "$LOG_DIR/iverilog.log" "${IVERILOG_CMD[@]}"; then
         log_success "Iverilog compilation completed."
     else
-        log_error "Iverilog failed. Check $LOG_DIR/iverilog.log."
+        log_error "Iverilog failed."
         exit 1
     fi
 
     # Run simulation using vvp from within the build directory so the waveform file is generated there.
     pushd "$BUILD_DIR" > /dev/null
     log_info "Running simulation with vvp..."
-    if vvp "sim.vvp" > "$LOG_DIR/vvp.log" 2>&1; then
+    if run_cmd "$LOG_DIR/vvp.log" vvp "sim.vvp"; then
         log_success "vvp simulation completed."
     else
         log_error "vvp simulation failed. Check $LOG_DIR/vvp.log."
@@ -234,7 +246,7 @@ ICEPACK_BIN="$BUILD_DIR/hardware.bin"
 log_info "Running Yosys synthesis..."
 YOSYS_CMD=(yosys -q -p "synth_ice40 -top $TOP_MODULE -json $YOSYS_JSON" "${ABS_VERILOG_FILES[@]}")
 [ "$VERBOSE" = true ] && log_debug "Yosys command: ${YOSYS_CMD[*]}"
-if "${YOSYS_CMD[@]}" > "$LOG_DIR/yosys.log" 2>&1; then
+if run_cmd "$LOG_DIR/yosys.log" "${YOSYS_CMD[@]}"; then
     log_success "Yosys synthesis completed."
 else
     log_error "Yosys synthesis failed. Check $LOG_DIR/yosys.log for details."
@@ -245,7 +257,7 @@ fi
 log_info "Running nextpnr-ice40..."
 NEXTPNR_CMD=(nextpnr-ice40 --hx8k --package cb132 --json "$YOSYS_JSON" --asc "$NEXTPNR_ASC" --pcf "$MERGED_PCF")
 [ "$VERBOSE" = true ] && log_debug "nextpnr-ice40 command: ${NEXTPNR_CMD[*]}"
-if "${NEXTPNR_CMD[@]}" > "$LOG_DIR/nextpnr.log" 2>&1; then
+if run_cmd "$LOG_DIR/nextpnr.log" "${NEXTPNR_CMD[@]}"; then
     log_success "nextpnr-ice40 completed."
 else
     log_error "nextpnr-ice40 failed. Check $LOG_DIR/nextpnr.log for details."
@@ -254,7 +266,7 @@ fi
 
 # --- Step 3: Bitstream Packing ---
 log_info "Packing bitstream with icepack..."
-if icepack "$NEXTPNR_ASC" "$ICEPACK_BIN" > "$LOG_DIR/icepack.log" 2>&1; then
+if run_cmd "$LOG_DIR/icepack.log" icepack "$NEXTPNR_ASC" "$ICEPACK_BIN"; then
     log_success "Bitstream packed successfully."
 else
     log_error "icepack failed. Check $LOG_DIR/icepack.log for details."
@@ -263,7 +275,7 @@ fi
 
 # --- Step 4: Upload to FPGA ---
 log_info "Uploading bitstream to FPGA with iceprog..."
-if iceprog "$ICEPACK_BIN" > "$LOG_DIR/iceprog.log" 2>&1; then
+if run_cmd "$LOG_DIR/iceprog.log" iceprog "$ICEPACK_BIN"; then
     log_success "Bitstream uploaded successfully."
 else
     log_error "iceprog failed. Check $LOG_DIR/iceprog.log for details."
