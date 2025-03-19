@@ -15,7 +15,7 @@ log_success() { echo -e "${GREEN}[$(date +"%T")] SUCCESS:${NC} $1"; }
 log_error()   { echo -e "${RED}[$(date +"%T")] ERROR:${NC} $1" >&2; }
 
 usage() {
-    echo "Usage: $0 [--verbose|-v] path/to/verilog_file.v ... --top top_module_name [--simulate] [--tb testbench_file.v]"
+    echo "Usage: $0 [--verbose|-v] [--with-common] path/to/verilog_file.v ... --top top_module_name [--simulate] [--tb testbench_file.v]"
     exit 1
 }
 
@@ -33,6 +33,7 @@ run_cmd() {
 # --- Parse Arguments ---
 VERBOSE=false
 SIMULATE=false
+WITH_COMMON=false
 TB_FILE=""   # Testbench file (optional, for simulation only)
 VERILOG_FILES=()
 TOP_MODULE=""
@@ -45,6 +46,10 @@ while [[ $# -gt 0 ]]; do
     case "$1" in
         --verbose|-v)
             VERBOSE=true
+            shift
+            ;;
+        --with-common)
+            WITH_COMMON=true
             shift
             ;;
         --top)
@@ -113,23 +118,26 @@ BUILD_DIR="$PROJECT_DIR/build"
 LOG_DIR="$BUILD_DIR/logs"
 mkdir -p "$LOG_DIR"
 
-# --- Automatically Include Common Modules ---
-# From the project directory, common modules are located at ../../common/modules.
-COMMON_MODULES_DIR="$(cd "$PROJECT_DIR/../../../common/modules" && pwd)"
-if [ -d "$COMMON_MODULES_DIR" ]; then
-    log_info "Searching for common modules in $COMMON_MODULES_DIR..."
-    COMMON_MODULE_FILES=($(find "$COMMON_MODULES_DIR" -maxdepth 1 -type f \( -name "*.v" -o -name "*.sv" \) 2>/dev/null))
-    if [ ${#COMMON_MODULE_FILES[@]} -gt 0 ]; then
-        for file in "${COMMON_MODULE_FILES[@]}"; do
-            abs_file="$(get_abs "$file")"
-            ABS_VERILOG_FILES+=("$abs_file")
-            [ "$VERBOSE" = true ] && log_debug "Added common module: $abs_file"
-        done
+# --- Optionally Include Common Modules ---
+if [ "$WITH_COMMON" = true ]; then
+    COMMON_MODULES_DIR="$(cd "$PROJECT_DIR/../../../common/modules" && pwd)"
+    if [ -d "$COMMON_MODULES_DIR" ]; then
+        log_info "Searching for common modules in $COMMON_MODULES_DIR..."
+        COMMON_MODULE_FILES=($(find "$COMMON_MODULES_DIR" -maxdepth 1 -type f -name "*.v" 2>/dev/null))
+        if [ ${#COMMON_MODULE_FILES[@]} -gt 0 ]; then
+            for file in "${COMMON_MODULE_FILES[@]}"; do
+                abs_file="$(get_abs "$file")"
+                ABS_VERILOG_FILES+=("$abs_file")
+                [ "$VERBOSE" = true ] && log_debug "Added common module: $abs_file"
+            done
+        else
+            log_info "No common module files found in $COMMON_MODULES_DIR."
+        fi
     else
-        log_info "No common module files found in $COMMON_MODULES_DIR."
+        log_error "Common modules directory $COMMON_MODULES_DIR does not exist."
     fi
 else
-    log_error "Common modules directory $COMMON_MODULES_DIR does not exist."
+    log_info "Skipping inclusion of common modules (use --with-common to include them)."
 fi
 
 # --- Merge Constraint Files ---

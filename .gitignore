@@ -1,10 +1,22 @@
+# macOS files
 .DS_Store
+
+# FPGA Toolchain Generated Files
 *.log
 *.asc
 *.bin
-hardware.json
-*.dblite
+*.bit
+*.json
+*.vcd
 *.vvp
 *.vpp
-*.vcd
-*.json
+*.dblite
+hardware.json
+
+# Build directories (if used)
+build/
+
+# Temporary and backup files
+*.tmp
+*.bak
+*.swp
