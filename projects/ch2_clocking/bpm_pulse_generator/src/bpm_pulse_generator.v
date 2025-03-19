@@ -1,13 +1,12 @@
 module bpm_pulse_generator #(
-    parameter BPM = 120
+    parameter BPM = 120,
+    parameter CLOCK_FREQ = 100_000_000
 ) (
     input wire clk,
     input wire reset,
     output reg [4:0] beats
 );
 
-    localparam CLOCK_FREQ = 100_000_000;
-    
     localparam integer QUARTER_NOTE_CYCLES = (CLOCK_FREQ * 60) / BPM; 
     localparam integer WHOLE_NOTE_CYCLES = QUARTER_NOTE_CYCLES * 4;
     localparam integer HALF_NOTE_CYCLES = QUARTER_NOTE_CYCLES * 2;

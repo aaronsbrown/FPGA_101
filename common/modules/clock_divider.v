@@ -1,5 +1,5 @@
 module clock_divider #(
-    parameter DIV_FACTOR = 50000000
+    parameter DIV_FACTOR = 50_000_000
 ) (
     input   wire    reset,
     input   wire    clk_in,
