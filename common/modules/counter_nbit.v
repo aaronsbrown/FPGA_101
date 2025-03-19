@@ -1,0 +1,1 @@
+../../projects/ch2_clocking/counter_nbit/src/counter_nbit.v
