@@ -40,7 +40,7 @@ This curriculum is divided into **6 progressive chapters**, each covering essent
 - **Clock Division & Frequency Scaling**
 - **Counters & Timing Signals**
 - **Generating BPM-based Pulses**
-- 📂 **Projects:** `clock_divider/`, `bpm_pulse_generator/`, `counter_4bit/`
+- 📂 **Projects:** `clock_divider/`, `bpm_pulse_generator_static/`, `counter_4bit/`
 
 ### **🔹 Chapter 3: Interfacing**
 - **Reading Data from an 8-bit Bus**

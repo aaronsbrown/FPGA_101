@@ -1,4 +1,4 @@
-module bpm_pulse_generator #(
+module bpm_pulse_generator_static #(
     parameter BPM = 120,
     parameter CLOCK_FREQ = 100_000_000
 ) (

@@ -12,7 +12,7 @@ This chapter introduces **clock management** and **timing control**, essential f
 
 ## Projects in This Chapter
 - [`clock_divider/`](clock_divider/) - Creating precise time intervals using clock division
-- [`bpm_pulse_generator/`](bpm_pulse_generator/) - Generating pulses based on a BPM setting
+- [`bpm_pulse_generator_static/`](bpm_pulse_generator_static/) - Generating pulses based on a BPM setting
 - [`counter_4bit/`](counter_4bit/) - Using counters to increment values
 
 ## Next Steps

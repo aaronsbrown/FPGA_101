@@ -1,13 +1,13 @@
 `timescale 1ns/1ps
 
-module bpm_pulse_generator_tb;
+module bpm_pulse_generator_static_tb;
     reg clk, reset;
     wire [4:0] beats;
 
     localparam CLOCK_FREQ = 400; // Simulation frequency
     // BPM = 120;
     // QUARTER_NOTE_CYCLES = (CLOCK_FREQ * 60) / BPM; ==> 200 cycles, safely nonzero
-    bpm_pulse_generator #(
+    bpm_pulse_generator_static #(
         .CLOCK_FREQ(CLOCK_FREQ)
     ) uut (
         .clk(clk),
@@ -21,7 +21,7 @@ module bpm_pulse_generator_tb;
     initial begin
         
         $dumpfile("waveform.vcd");
-        $dumpvars(0, bpm_pulse_generator_tb);
+        $dumpvars(0, bpm_pulse_generator_static_tb);
 
         $monitor( "Time =%0t | clk=%b | reset=%b | beats=%b", $time, clk, reset, beats);
 

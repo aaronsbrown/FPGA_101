@@ -7,7 +7,7 @@ module top (
 );
     wire [4:0] o_beats;
 
-    bpm_pulse_generator #(
+    bpm_pulse_generator_static #(
         .BPM(60)
     ) pulse_gen (
         .clk(clk),
