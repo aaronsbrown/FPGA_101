@@ -15,7 +15,7 @@ log_success() { echo -e "${GREEN}[$(date +"%T")] SUCCESS:${NC} $1"; }
 log_error()   { echo -e "${RED}[$(date +"%T")] ERROR:${NC} $1" >&2; }
 
 usage() {
-    echo "Usage: $0 [--verbose|-v] [--with-common] path/to/verilog_file.v ... --top top_module_name [--simulate] [--tb testbench_file.v]"
+    echo "Usage: $0 [--verbose|-v] [--with-common] path/to/verilog_file.v ... --top top_module_name [--tb testbench_file.v]"
     exit 1
 }
 
@@ -32,7 +32,6 @@ run_cmd() {
 
 # --- Parse Arguments ---
 VERBOSE=false
-SIMULATE=false
 WITH_COMMON=false
 TB_FILE=""   # Testbench file (optional, for simulation only)
 VERILOG_FILES=()
@@ -59,10 +58,6 @@ while [[ $# -gt 0 ]]; do
             fi
             TOP_MODULE="$2"
             shift 2
-            ;;
-        --simulate)
-            SIMULATE=true
-            shift
             ;;
         --tb)
             if [[ -z "$2" ]]; then
@@ -107,7 +102,7 @@ for file in "${VERILOG_FILES[@]}"; do
 done
 
 # --- Determine Project Directory ---
-# We assume the provided verilog file is in the project's "src" directory.
+# We assume the provided Verilog file is in the project's "src" directory.
 # Therefore, the project directory is one level up from the src folder.
 SRC_DIR=$(dirname "${ABS_VERILOG_FILES[0]}")
 PROJECT_DIR=$(dirname "$SRC_DIR")
@@ -168,81 +163,6 @@ for file in "${PROJECT_PCF_FILES[@]}"; do
     echo "" >> "$MERGED_PCF"
 done
 log_info "Merged constraints saved to: $MERGED_PCF"
-
-# --- Simulation Flow (if --simulate flag is provided) ---
-if [ "$SIMULATE" = true ]; then
-    log_info "Running simulation flow..."
-    SIM_VVP="$BUILD_DIR/sim.vvp"
-
-    # Determine the testbench file to include.
-    if [ -n "$TB_FILE" ]; then
-        # If a testbench file is provided via --tb, prepend the test directory if no "/" is found.
-        if [[ "$TB_FILE" != *"/"* ]]; then
-            TB_FILE="$PROJECT_DIR/test/$TB_FILE"
-        fi
-        TESTBENCH_FILE=$(get_abs "$TB_FILE")
-        if [ ! -f "$TESTBENCH_FILE" ]; then
-            log_error "Specified testbench file $TESTBENCH_FILE does not exist."
-            exit 1
-        fi
-        log_info "Using specified testbench file: $TESTBENCH_FILE"
-        ABS_VERILOG_FILES+=("$TESTBENCH_FILE")
-    else
-        # No testbench provided, so search the test directory.
-        TEST_DIR="$PROJECT_DIR/test"
-        if [ -d "$TEST_DIR" ]; then
-            log_info "Searching for testbench files in $TEST_DIR..."
-            TEST_FILES=($(find "$TEST_DIR" -maxdepth 1 -type f -name "*_tb.v" 2>/dev/null))
-            if [ ${#TEST_FILES[@]} -eq 0 ]; then
-                log_error "No testbench files found in $TEST_DIR. Please add a testbench file ending with _tb.v."
-                exit 1
-            elif [ ${#TEST_FILES[@]} -gt 1 ]; then
-                log_error "Multiple testbench files found in $TEST_DIR. Use the --tb flag to specify one."
-                exit 1
-            else
-                TESTBENCH_FILE=$(get_abs "${TEST_FILES[0]}")
-                log_info "Using testbench file: $TESTBENCH_FILE"
-                ABS_VERILOG_FILES+=("$TESTBENCH_FILE")
-            fi
-        else
-            log_error "Test directory $TEST_DIR not found."
-            exit 1
-        fi
-    fi
-
-    # Compile simulation sources with iverilog.
-    IVERILOG_CMD=(iverilog -g2012 -o "$SIM_VVP" "${ABS_VERILOG_FILES[@]}")
-    [ "$VERBOSE" = true ] && log_debug "Iverilog command: ${IVERILOG_CMD[*]}"
-    if run_cmd "$LOG_DIR/iverilog.log" "${IVERILOG_CMD[@]}"; then
-        log_success "Iverilog compilation completed."
-    else
-        log_error "Iverilog failed."
-        exit 1
-    fi
-
-    # Run simulation using vvp from within the build directory so the waveform file is generated there.
-    pushd "$BUILD_DIR" > /dev/null
-    log_info "Running simulation with vvp..."
-    if run_cmd "$LOG_DIR/vvp.log" vvp "sim.vvp"; then
-        log_success "vvp simulation completed."
-    else
-        log_error "vvp simulation failed. Check $LOG_DIR/vvp.log."
-        popd > /dev/null
-        exit 1
-    fi
-    popd > /dev/null
-
-    # Attempt to open the generated waveform (assumed to be at BUILD_DIR/waveform.vcd).
-    WAVEFORM="$BUILD_DIR/waveform.vcd"
-    if [ -f "$WAVEFORM" ]; then
-        log_info "Opening waveform in gtkwave..."
-        gtkwave "$WAVEFORM" &
-    else
-        log_error "Waveform file $WAVEFORM not found. Ensure your testbench generates a VCD file."
-    fi
-
-    exit 0
-fi
 
 # --- FPGA Build Flow ---
 # Define Output Files

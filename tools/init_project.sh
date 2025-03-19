@@ -77,17 +77,55 @@ echo -e "## Hardware Requirements\n- FPGA Board: Alchitry Cu / IceBreaker\n- Any
 echo -e "## Status\n- [ ] Not Started\n- [ ] In Progress\n- [ ] Completed\n" >> "$README_FILE"
 echo -e "${GREEN}README.md created with project metadata.${NC}"
 
-# ✅ Auto-generate default top.v in /src/
+# Set source and test directories
 SRC_DIR="$NEW_PROJECT_DIR/src"
+TEST_DIR="$NEW_PROJECT_DIR/test"
 mkdir -p "$SRC_DIR"
-TOP_FILE="$SRC_DIR/top.v"
-echo -e "module $PROJECT_NAME (\n    input clk,\n    input rst_n\n);\n\n// Add logic here\n\nendmodule" > "$TOP_FILE"
-echo -e "${GREEN}Generated default Verilog file: src/top.v${NC}"
+mkdir -p "$TEST_DIR"
 
-# ✅ Auto-add project to Git tracking if in a Git repo
-if [[ -d "$TARGET_ABS/.git" ]]; then
-    git add "$NEW_PROJECT_DIR"
-    echo -e "${GREEN}Added '$PROJECT_NAME' to Git tracking.${NC}"
-fi
+# --- Create board-specific top file for Alchitry CU ---
+# Overwrite the previously generated top.v with board-specific interface
+cat <<'EOF' > "$SRC_DIR/top.v"
+module top (
+    input clk,
+    input rst_n,
+    input usb_rx,
+    output usb_tx,
+    output [7:0] led
+);
+    // Add your board-specific logic here
+endmodule
+EOF
+
+# --- Create a project file named <project_name>.v in src/ ---
+PROJECT_FILE="$SRC_DIR/${PROJECT_NAME}.v"
+cat <<'EOF' > "$PROJECT_FILE"
+module ${PROJECT_NAME} (
+    // Define your module interface here
+);
+    // Your module implementation goes here
+endmodule
+EOF
+
+# --- Create a testbench file in test/ named <project_name>_tb.sv ---
+TB_FILE="$TEST_DIR/${PROJECT_NAME}_tb.sv"
+cat <<'EOF' > "$TB_FILE"
+`timescale 1ns / 1ps
+
+module ${PROJECT_NAME}_tb;
+    // Declare testbench signals
+
+    // Instantiate the DUT
+    ${PROJECT_NAME} uut (
+        // Port mappings
+    );
+
+    initial begin
+        // Add testbench stimulus
+        $finish;
+    end
+
+endmodule
+EOF
 
 echo -e "${GREEN}Project '$PROJECT_NAME' initialized successfully at '$NEW_PROJECT_DIR'!${NC}"

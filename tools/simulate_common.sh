@@ -135,7 +135,6 @@ fi
 popd > /dev/null
 
 # --- Open Waveform ---
-# The testbench should dump a VCD file (e.g., "waveform.vcd") into SIM_BUILD_DIR.
 WAVEFORM="$SIM_BUILD_DIR/waveform.vcd"
 if [ -f "$WAVEFORM" ]; then
     log_info "Opening waveform in gtkwave..."
