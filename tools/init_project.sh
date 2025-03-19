@@ -85,7 +85,7 @@ mkdir -p "$TEST_DIR"
 
 # --- Create board-specific top file for Alchitry CU ---
 # Overwrite the previously generated top.v with board-specific interface
-cat <<'EOF' > "$SRC_DIR/top.v"
+cat <<EOF > "$SRC_DIR/top.v"
 module top (
     input clk,
     input rst_n,
@@ -99,7 +99,7 @@ EOF
 
 # --- Create a project file named <project_name>.v in src/ ---
 PROJECT_FILE="$SRC_DIR/${PROJECT_NAME}.v"
-cat <<'EOF' > "$PROJECT_FILE"
+cat <<EOF > "$PROJECT_FILE"
 module ${PROJECT_NAME} (
     // Define your module interface here
 );
@@ -109,8 +109,8 @@ EOF
 
 # --- Create a testbench file in test/ named <project_name>_tb.sv ---
 TB_FILE="$TEST_DIR/${PROJECT_NAME}_tb.sv"
-cat <<'EOF' > "$TB_FILE"
-`timescale 1ns / 1ps
+cat <<EOF > "$TB_FILE"
+\`timescale 1ns / 1ps
 
 module ${PROJECT_NAME}_tb;
     // Declare testbench signals
@@ -122,7 +122,7 @@ module ${PROJECT_NAME}_tb;
 
     initial begin
         // Add testbench stimulus
-        $finish;
+        \$finish;
     end
 
 endmodule
