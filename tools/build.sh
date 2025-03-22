@@ -118,7 +118,7 @@ if [ "$WITH_COMMON" = true ]; then
     COMMON_MODULES_DIR="$(cd "$PROJECT_DIR/../../../common/modules" && pwd)"
     if [ -d "$COMMON_MODULES_DIR" ]; then
         log_info "Searching for common modules in $COMMON_MODULES_DIR..."
-        COMMON_MODULE_FILES=($(find "$COMMON_MODULES_DIR" -maxdepth 1 -type f -name "*.v" 2>/dev/null))
+        COMMON_MODULE_FILES=($(find "$COMMON_MODULES_DIR" -maxdepth 1 \( -type f -o -type l \) -name "*.v" 2>/dev/null))
         if [ ${#COMMON_MODULE_FILES[@]} -gt 0 ]; then
             for file in "${COMMON_MODULE_FILES[@]}"; do
                 abs_file="$(get_abs "$file")"

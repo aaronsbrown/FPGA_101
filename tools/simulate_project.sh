@@ -115,7 +115,7 @@ else
     TEST_DIR="$PROJECT_DIR/test"
     if [ -d "$TEST_DIR" ]; then
         log_info "Searching for testbench files in $TEST_DIR..."
-        TEST_FILES=( $(find "$TEST_DIR" -maxdepth 1 -type f -name "*_tb.v" 2>/dev/null) )
+        TEST_FILES=( $(find "$TEST_DIR" -maxdepth 1 -type f \( -name "*_tb.v" -o -name "*_tb.sv" \) 2>/dev/null) )
         if [ ${#TEST_FILES[@]} -eq 0 ]; then
             log_error "No testbench files found in $TEST_DIR. Please add a testbench file ending with _tb.v."
             exit 1

@@ -80,7 +80,7 @@ if [ -n "$TB_FILE" ]; then
 else
     # No testbench specified; search SIM_TEST_DIR for *_tb.v files.
     log_info "Searching for testbench files in $SIM_TEST_DIR..."
-    TEST_FILES=($(find "$SIM_TEST_DIR" -maxdepth 1 -type f -name "*_tb.v" 2>/dev/null))
+    TEST_FILES=($(find "$SIM_TEST_DIR" -maxdepth 1 -type f \( -name "*_tb.v" -o -name "*_tb.sv" \) 2>/dev/null))
     if [ ${#TEST_FILES[@]} -eq 0 ]; then
         log_error "No testbench files found in $SIM_TEST_DIR. Please add a testbench file ending with _tb.v."
         exit 1
