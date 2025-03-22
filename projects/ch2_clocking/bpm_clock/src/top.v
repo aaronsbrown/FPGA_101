@@ -17,9 +17,6 @@ module top (
     // TODO: Convert one of the beat outputs (e.g., sixteenth note) from toggle mode to one-cycle pulse mode
     // Tip: Set beats[2] <= 1 for one cycle when counter hits, then clear back to 0 in the else block
 
-    // TODO: Replace raw button index numbers with localparams for better readability
-    // Example: localparam BTN_INC = 1; localparam BTN_DEC = 3;
-
     // TODO: Create a 7-segment display module to show the current BPM value
     // Hint: This will require splitting bpm_current into digits and mapping each to 7-segment segments
 
@@ -32,9 +29,10 @@ module top (
     // TODO: (Optional) Add tap tempo functionality using a button and timestamping logic
     // This is more advanced but lets you "tap in" the desired BPM by measuring time between presses
 
-    localparam BTN_INC = 4;
-    localparam BTN_DEC = 3;
+    localparam BTN_INC = 0;
+    localparam BTN_DEC = 2;
 
+    reg [7:0] bpm;
     reg [4:0] o_beats;
     reg conditioned_button_edge_inc;
     reg conditioned_button_edge_dec;
@@ -56,14 +54,23 @@ module top (
         .reset(~rst_n),
         .bpm_inc(conditioned_button_edge_inc),
         .bpm_dec(conditioned_button_edge_dec),
-        .beats(o_beats)
+        .beats(o_beats),
+        .o_bpm(bpm)
+    );
+
+    seg7_display u_display (
+        .clk(clk),
+        .reset(~rst_n),
+        .number(bpm),
+        .seg7( io_segment[6:0] ),
+        .select(io_select)
     );
 
     always @(*) begin
         usb_tx = usb_rx;
         io_led = 24'h000000;
-        io_segment = 8'hff;
-        io_select = 4'hf;
+        //io_segment = 8'hff;
+        //io_select = 4'hf;
     end
 
     assign led[4:0] = o_beats;

@@ -10,7 +10,8 @@ module bpm_clock #(
     // beats[0] = quarter
     // beats[1] = eighth    TODO
     // beats[2] = sixteenth TODO
-    output reg [4:0] beats
+    output reg [4:0] beats,
+    output reg [7:0] o_bpm
 );
 
     localparam MIN_BPM = 40;
@@ -50,6 +51,7 @@ module bpm_clock #(
             en_counter <= 0;
             sn_counter <= 0;
             bpm_current <= BPM;
+            bpm <= 0;
             beats <= 5'b00000;
         end else begin
 
@@ -79,7 +81,9 @@ module bpm_clock #(
                 bpm_current <= bpm_current + 10;
             end else if( bpm_dec && bpm_current > MIN_BPM ) begin
                 bpm_current <= bpm_current - 10;
-            end    
+            end  
+
+            o_bpm <= bpm_current;  
         end
     end
 
