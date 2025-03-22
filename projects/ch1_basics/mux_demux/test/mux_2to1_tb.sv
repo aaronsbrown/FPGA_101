@@ -24,12 +24,12 @@ module mux_2to1_tb;
         #10;
         // Use the helper function for assertion.
         // Adjust the expected value as appropriate (here we assume o should be 1)
-        pretty_print_assert(o == 1, "output should be 1");
+        pretty_print_assert_cond(o == 1, "output should be 1");
 
         // Change stimulus and test another scenario
         sel = 0;
         #10;
-        pretty_print_assert(o == 0, "output should be 0");
+        pretty_print_assert_cond(o == 0, "output should be 0");
 
         $finish;
     end

@@ -6,18 +6,9 @@ module seg7_display (
     output reg [3:0] select
 );
     
-    wire slow_clk;
     reg[3:0] hundreds, tens, ones;
     wire [6:0] seg_ones, seg_tens, seg_hundreds;
     reg [1:0] mux_counter;
-
-    clock_divider #(
-        .DIV_FACTOR(50_000)
-    ) clk_div (
-        .reset(reset),
-        .clk_in(clk),
-        .clk_out(slow_clk)
-    );
 
     digit_to_7seg u_ones (
         .digit(ones),
@@ -42,7 +33,7 @@ module seg7_display (
     end
     
     // SEQUENTIAL: Multiplexing
-    always @(posedge slow_clk or posedge reset) begin
+    always @(posedge clk or posedge reset) begin
         if (reset) begin
             mux_counter <= 2'b00;
         end else begin
@@ -58,17 +49,17 @@ module seg7_display (
     always @(*) begin
         case (mux_counter) 
             2'b00: begin
-                select = 4'b1110;
+                select = ~4'b0001;
                 seg7 = seg_ones;
             end
             
             2'b01: begin
-                select = 4'b1101;
+                select = ~4'b0010;
                 seg7 = seg_tens;
             end
 
             2'b10: begin
-                select = 4'b1011;
+                select = ~4'b0100;
                 seg7 = seg_hundreds;
             end
 

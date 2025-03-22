@@ -58,8 +58,16 @@ module top (
         .o_bpm(bpm)
     );
 
+    clock_divider #(
+        .DIV_FACTOR(50_000)
+    ) clk_div (
+        .reset(reset),
+        .clk_in(clk),
+        .clk_out(slow_clk)
+    );
+
     seg7_display u_display (
-        .clk(clk),
+        .clk(slow_clk),
         .reset(~rst_n),
         .number(bpm),
         .seg7( io_segment[6:0] ),

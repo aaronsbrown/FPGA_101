@@ -23,22 +23,22 @@ module mux_4to1_tb;
         
         sel = 'b00;
         #10;
-        pretty_print_assert(o == 0, "output should be 0");
+        pretty_print_assert_cond(o == 0, "output should be 0");
 
         // Change stimulus and test another scenario
         sel = 'b01;
         #10;
-        pretty_print_assert(o == 1, "output should be 1");
+        pretty_print_assert_cond(o == 1, "output should be 1");
 
         // Change stimulus and test another scenario
         sel = 'b10;
         #10;
-        pretty_print_assert(o == 1, "output should be 1");
+        pretty_print_assert_cond(o == 1, "output should be 1");
 
         // Change stimulus and test another scenario
         sel = 'b11;
         #10;
-        pretty_print_assert(o == 0, "output should be 0");
+        pretty_print_assert_cond(o == 0, "output should be 0");
 
         $finish;
     end
