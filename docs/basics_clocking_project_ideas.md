@@ -45,25 +45,25 @@ Focus: **Timing control, clock dividers, rhythmic pulse generation**
 
 ### 🎵 Musical/Temporal Project Ideas
 
-1. **BPM-Based Pulse Generator**  
+1. [x] **BPM-Based Pulse Generator**  
    Convert FPGA clock into 8th, quarter, or dotted note intervals at a fixed BPM. — Done via `bpm_clock` module
 
-2. **Tap Tempo Button**  
+2. [ ] **Tap Tempo Button**  
    Measure time between button presses to dynamically set BPM.
 
-3. **Multi-Division Clock Module**  
+3. [x] **Multi-Division Clock Module**  
    Output 1/4 note, 1/8 note, 1/16 note simultaneously from one master clock. — `bpm_clock` outputs 1/4, 1/8, 1/16 simultaneously
 
-4. **Visual Metronome**  
+4. [x] **Visual Metronome**  
    Blink LEDs to match beat subdivisions—great with different color codes. — 7-segment BPM display + LED beat indicators
 
-5. **Swing Timing with Toggle Logic**  
+5. [ ] **Swing Timing with Toggle Logic**  
    Alternate between long and short pulses to simulate “groove” (see `notes_swing.md`).
 
-6. **Rhythmic Gate Sequencer**  
+6. [ ] **Rhythmic Gate Sequencer**  
    Trigger pulses in a pattern (like 10101000) synced to internal clock ticks.
 
-7. **Polyrhythm Generator**  
+7. [ ] **Polyrhythm Generator**  
    Generate two or more independent clocks (e.g., 4/4 and 3/4) for cross-rhythmic interplay.
 
 ---
