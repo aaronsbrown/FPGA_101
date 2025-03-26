@@ -8,6 +8,7 @@
 
 module midi_uart_out #(
     parameter BAUD_RATE = 115200           // UART baud rate
+    // parameter BAUD_RATE = 10_000_000           // UART baud rate
 ) (
     input clk,                             // System clock
     input reset,                           // Asynchronous reset (active high)
