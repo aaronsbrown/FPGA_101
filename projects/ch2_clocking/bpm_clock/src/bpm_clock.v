@@ -11,6 +11,7 @@ module bpm_clock #(
     // beats[1] = eighth    
     // beats[2] = sixteenth 
     output reg [4:0] beats,
+    output reg [4:0] beat_triggers,
     output reg [7:0] o_bpm
 );
 
@@ -53,28 +54,35 @@ module bpm_clock #(
             bpm_current <= BPM;
             o_bpm <= 0;
             beats <= 5'b00000;
+            beat_triggers <= 5'b00000;
         end else begin
 
-            if(qn_counter == quarter_cycles_LUT[ bpm_current - MIN_BPM ]) begin
+            if (qn_counter < quarter_cycles_LUT[bpm_current - MIN_BPM] - 1) begin
+                qn_counter <= qn_counter + 1;
+                beat_triggers[0] <= 0;
+            end else begin
                 qn_counter <= 0;
                 beats[0] <= ~beats[0];  
-            end else begin 
-                qn_counter <= qn_counter + 1;
-            end
+                beat_triggers[0] <= 1;
+            end 
 
-            if(en_counter == eighth_cycles_LUT[ bpm_current - MIN_BPM ]) begin
+            if(en_counter < eighth_cycles_LUT[ bpm_current - MIN_BPM ] - 1) begin
+                en_counter <= en_counter + 1;
+                beat_triggers[1] <= 0;
+            end else begin
                 en_counter <= 0;
                 beats[1] <= ~beats[1];  
-            end else begin 
-                en_counter <= en_counter + 1;
+                beat_triggers[1] <= 1;
             end
 
-             if(sn_counter == sixteenth_cycles_LUT[ bpm_current - MIN_BPM ]) begin
+            if(sn_counter < sixteenth_cycles_LUT[ bpm_current - MIN_BPM ] - 1) begin
+                sn_counter <= sn_counter + 1;
+                beat_triggers[2] <= 0;
+            end else begin
                 sn_counter <= 0;
                 beats[2] <= ~beats[2];  
-            end else begin 
-                sn_counter <= sn_counter + 1;
-            end
+                beat_triggers[2] <= 1;
+            end 
 
             // increase BPM after updating counter
             if ( bpm_inc  && bpm_current < MAX_BPM ) begin
