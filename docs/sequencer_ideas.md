@@ -74,6 +74,16 @@ This document outlines a step-by-step plan to build a multitrack generative step
 - Implement a probabilistic sequencer mode (e.g. random note skips).
 - Add pattern memory slots, variation, or song mode sequencing.
 
+### 🧬 Making It Generative
+
+- Replace fixed `note_sequence` ROM with an LFSR-based melody generator.
+- Use random bits to probabilistically skip steps or mute notes.
+- Combine multiple tracks using logic gates (AND, OR, XOR) to produce new patterns.
+- Introduce variation via transposition, inversion, or pattern morphing on each loop.
+- Add simple state machines to evolve the sequence over time or in response to triggers.
+- Use polyrhythmic step pulses to create emergent behavior between tracks.
+- Explore neighbor-driven pitch mapping in Game of Life: use the number or pattern of live neighbors to select notes from a musical scale, enabling evolving harmonic textures. For example, 0–8 neighbors could index into a scale LUT, or neighbor patterns could determine chords or motifs.
+
 ---
 
 This roadmap builds from a functional one-track sequencer to a powerful multitrack system. Each step is modular, allowing for easy testing and expansion.

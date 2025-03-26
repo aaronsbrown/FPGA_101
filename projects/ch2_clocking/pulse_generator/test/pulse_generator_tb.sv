@@ -24,6 +24,7 @@ module pulse_generator_tb;
 
         clk = 0;
         reset = 1;
+        trigger = 0;
 
         @(posedge clk);
         reset = 0;

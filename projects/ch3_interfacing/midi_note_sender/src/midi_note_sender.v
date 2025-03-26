@@ -20,7 +20,7 @@ module midi_note_sender (
     reg uart_send_d; // delayed data
     reg [7:0] uart_data;
     
-    uart_tx uart (
+    midi_uart_out uart (
         .clk(clk),
         .reset(reset),
         .send(uart_send),

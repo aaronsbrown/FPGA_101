@@ -121,7 +121,17 @@ module ${PROJECT_NAME}_tb;
     );
 
     initial begin
+        \$dumpfile("waveform.vcd");
+        \$dumpvars(0, ${PROJECT_NAME}_tb);
+        
         // Add testbench stimulus
+        clk = 0;
+        reset = 1;
+
+        @(posedge clk);
+        reset = 0;
+        
+        \$display("Test complete at time %0t", \$time);
         \$finish;
     end
 

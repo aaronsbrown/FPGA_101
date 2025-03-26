@@ -47,7 +47,7 @@ module top (
     );
 
     // UART transmitter module
-    uart_tx ut (
+    midi_uart_out ut (
         .clk(clk),
         .reset(~rst_n),
         .send(send_if_not_paused), // Send signal only if not paused

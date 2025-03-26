@@ -1,13 +1,13 @@
 // -----------------------------------------------------------------------------
-// Module: uart_tx
+// Module: midi_uart_out
 // Description:
 //   This module transmits an 8-bit byte over a UART serial connection using
 //   8N1 format (1 start bit, 8 data bits, 1 stop bit). It takes a one-cycle
 //   'send' pulse and emits the UART-encoded byte over the 'tx' output.
 // -----------------------------------------------------------------------------
 
-module uart_tx #(
-    parameter BAUD_RATE = 115200           // UART baud rate
+module midi_uart_out #(
+    parameter BAUD_RATE = 10000000           // UART baud rate
 ) (
     input clk,                             // System clock
     input reset,                           // Asynchronous reset (active high)
