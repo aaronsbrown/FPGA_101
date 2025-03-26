@@ -27,6 +27,15 @@ module seg7_display (
         .seg7(seg_hundreds)
     );
 
+    wire slow_clk;
+    clock_divider #(
+        .DIV_FACTOR(50_000)
+    ) clk_div (
+        .reset(reset),
+        .clk_in(clk),
+        .clk_out(slow_clk)
+    );
+
     //  COMBINATIONAL: Digit extraction
     always @(*) begin
         hundreds = number / 100;
@@ -35,7 +44,7 @@ module seg7_display (
     end
     
     // SEQUENTIAL: Multiplexing
-    always @(posedge clk or posedge reset) begin
+    always @(posedge slow_clk or posedge reset) begin
         if (reset) begin
             mux_counter <= 2'b00;
         end else begin
