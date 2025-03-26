@@ -1,7 +1,7 @@
 module top (
     input clk,
     input rst_n,
-    // output [7:0] led,
+    output [7:0] led,
     output usb_tx,
     output reg [23:0] io_led,
     output reg [7:0] io_segment,
@@ -27,15 +27,18 @@ module top (
         .conditioned_button_edge(conditioned_button_edge_dec)
     );
 
+    assign led[6] = io_button[BTN_DEC];
+    assign led[7] = io_button[BTN_INC];
+
     sequencer u_sequencer (
         .clk(clk),
         .rst(~rst_n),
         .btn_inc_bpm(conditioned_button_edge_inc),
         .btn_dec_bpm(conditioned_button_edge_dec),
         .leds(io_led),
-        .seg_display(io_segment[6:0]),
+        .seg_display( {1'b0, io_segment[6:0] }),
         .seg_select(io_select),
         .tx(usb_tx)
     );
 
-endmodule
+endmodule 

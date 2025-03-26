@@ -58,10 +58,11 @@ module top (
         .o_bpm(bpm)
     );
 
+    wire slow_clk;
     clock_divider #(
         .DIV_FACTOR(50_000)
     ) clk_div (
-        .reset(reset),
+        .reset(~rst_n),
         .clk_in(clk),
         .clk_out(slow_clk)
     );

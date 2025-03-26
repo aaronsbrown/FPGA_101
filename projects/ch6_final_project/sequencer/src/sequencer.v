@@ -24,48 +24,57 @@ module sequencer #(
     );
 
 
-    // === Step Sequencer ===
-    localparam NOTE_COUNT = 3;
-    localparam STEP_IDX_WIDTH = $clog2(NOTE_COUNT);
-    wire pulse_8th = beats[1];
-    wire [STEP_IDX_WIDTH-1:0] step_idx;
-    seq_player #( .NOTE_COUNT(NOTE_COUNT) ) u_seq_player(
-        .clk(clk),
-        .rst(rst),
-        .pulse_choose_note(pulse_8th),
-        .busy(busy),
-        .pulse_send_note(trigger_send_note),
-        .midi_note(midi_note),
-        .midi_velocity(midi_velocity),
-        .step_idx(step_idx)
-    );
+    // // === Step Sequencer ===
+    // localparam NOTE_COUNT = 3;
+    // localparam STEP_IDX_WIDTH = $clog2(NOTE_COUNT);
+    // wire pulse_8th = beats[1];
+    // wire [STEP_IDX_WIDTH-1:0] step_idx;
+    // seq_player #( .NOTE_COUNT(NOTE_COUNT) ) u_seq_player(
+    //     .clk(clk),
+    //     .rst(rst),
+    //     .pulse_choose_note(pulse_8th),
+    //     .busy(busy),
+    //     .pulse_send_note(trigger_send_note),
+    //     .midi_note(midi_note),
+    //     .midi_velocity(midi_velocity),
+    //     .step_idx(step_idx)
+    // );
 
     
-    // === MIDI Output ===
-    wire busy;
-    wire trigger_send_note;
-    wire [6:0] midi_note;
-    wire [6:0] midi_velocity;
+    // // === MIDI Output ===
+    // wire busy;
+    // wire trigger_send_note;
+    // wire [6:0] midi_note;
+    // wire [6:0] midi_velocity;
    
-    midi_note_sender u_midi_note_sender(
-        .clk(clk),
-        .reset(rst),
-        .trigger(trigger_send_note),
-        .channel(MIDI_CHANNEL),
-        .note(midi_note),
-        .velocity(midi_velocity),
-        .tx(tx),
-        .busy(busy)
-    );
+    // midi_note_sender u_midi_note_sender(
+    //     .clk(clk),
+    //     .reset(rst),
+    //     .trigger(trigger_send_note),
+    //     .channel(MIDI_CHANNEL),
+    //     .note(midi_note),
+    //     .velocity(midi_velocity),
+    //     .tx(tx),
+    //     .busy(busy)
+    // );
    
 
-    // === LED Debug ===
-    localparam LED_WIDTH = 24;
-    assign leds = { {(LED_WIDTH-STEP_IDX_WIDTH){1'b0}}, step_idx };
+    // // === LED Debug ===
+    // localparam LED_WIDTH = 24;
+    // assign leds = { {(LED_WIDTH-STEP_IDX_WIDTH){1'b0}}, step_idx };
 
     // === 7-Segment Display ===
+    wire slow_clock;
+    clock_divider #(
+        .DIV_FACTOR(50_000)
+    ) clk_div (
+        .reset(rst),
+        .clk_in(clk),
+        .clk_out(slow_clk)
+    );
+
     seg7_display u_seg7_display (
-        .clk(clk),
+        .clk(slow_clk),
         .reset(rst),
         .number(bpm),
         .seg7(seg_display),
