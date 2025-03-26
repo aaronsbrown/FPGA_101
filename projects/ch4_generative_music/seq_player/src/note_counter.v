@@ -1,11 +1,11 @@
 module note_counter #(
-    parameter N = 3,
-    parameter MAX = 8
+    parameter COUNT_IDX = 3'b011,
+    parameter MAX = 4'b1000
 )(
     input  wire clk,
     input  wire rst,
     input  wire enable,       // Advance on pulse
-    output reg [N-1:0] count
+    output reg [COUNT_IDX-1:0] count
 );
 
     // 1.	On every pulse tick → advance to the next note.

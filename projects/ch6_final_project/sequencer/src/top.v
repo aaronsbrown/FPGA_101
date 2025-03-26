@@ -35,8 +35,9 @@ module top (
         .rst(~rst_n),
         .btn_inc_bpm(conditioned_button_edge_inc),
         .btn_dec_bpm(conditioned_button_edge_dec),
-        .leds(io_led),
-        .seg_display( {1'b0, io_segment[6:0] }),
+        .leds(led),
+        .io_leds(io_led),
+        .seg_display( {io_segment[6:0] }),
         .seg_select(io_select),
         .tx(usb_tx)
     );

@@ -1,22 +1,23 @@
 module seq_player #(
-    parameter NOTE_COUNT = 3
+    parameter STEP_IDX_WIDTH = 3'b011
 )(
     input clk,
     input rst,
     input pulse_choose_note,
     input busy,
     output reg pulse_send_note,
-    output [7:0] midi_note,
-    output [7:0] midi_velocity,
+    output [6:0] midi_note,
+    output [6:0] midi_velocity,
     output [STEP_IDX_WIDTH-1:0] step_idx  
 );
-    localparam STEP_IDX_WIDTH = $clog2(NOTE_COUNT);
+
+    // localparam STEP_IDX_WIDTH = NOTE_COUNT;
     localparam WAIT_FOR_TICK = 2'd0,
                SEND_NOTE = 2'd1;
     reg [1:0] state;
     
 
-    note_counter nc (
+    note_counter u_note_counter (
         .clk(clk),
         .rst(rst),
         .enable(pulse_choose_note),
@@ -24,7 +25,7 @@ module seq_player #(
     );
 
      // note_sequence
-    note_sequence #( .N(NOTE_COUNT) ) ns (
+    note_sequence #( .INDEX_WIDTH(STEP_IDX_WIDTH) ) u_note_sequence (
         .clk(clk),
         .index(step_idx),
         .note(midi_note),
