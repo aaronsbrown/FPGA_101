@@ -1,6 +1,6 @@
 module bpm_clock #(
     parameter BPM = 120,
-    parameter CLOCK_FREQ = 100_000_000 // parameterize for testing
+    parameter CLOCK_FREQ = 25_000_000 // parameterize for testing
 ) (
     input clk,
     input reset,
@@ -8,8 +8,8 @@ module bpm_clock #(
     input bpm_dec,
 
     // beats[0] = quarter
-    // beats[1] = eighth    TODO
-    // beats[2] = sixteenth TODO
+    // beats[1] = eighth    
+    // beats[2] = sixteenth 
     output reg [4:0] beats,
     output reg [7:0] o_bpm
 );
@@ -51,7 +51,7 @@ module bpm_clock #(
             en_counter <= 0;
             sn_counter <= 0;
             bpm_current <= BPM;
-            bpm <= 0;
+            o_bpm <= 0;
             beats <= 5'b00000;
         end else begin
 
