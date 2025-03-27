@@ -37,7 +37,7 @@ module top (
         .btn_dec_bpm(conditioned_button_edge_dec),
         .leds(led),
         .io_leds(io_led),
-        .seg_display( {io_segment[6:0] }),
+        .seg_display(io_segment[6:0]),
         .seg_select(io_select),
         .tx(usb_tx)
     );
