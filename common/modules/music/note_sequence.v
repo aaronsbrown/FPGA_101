@@ -8,14 +8,14 @@ module note_sequence #(
     output reg  [6:0]  velocity
 );
 
+    always @(*) begin
     // Simple synchronous ROM
-    always @(posedge clk) begin
-        case (index)
+    case (index)
             3'b000: begin
                 note <= 7'd60; // C4
-                velocity <= 8'd100;
+                velocity <= 7'd100;
             end
-            3'b001:  begin
+            3'b001: begin
                 note <= 7'd62; // D4
                 velocity <= 7'd80;
             end
