@@ -1,10 +1,10 @@
 `timescale 1ns / 1ps
 
-module midi_uart_out_tb;
+module midi_uart_tx_tb;
     // Declare testbench signals
 
     // Instantiate the DUT
-    midi_uart_out uut (
+    midi_uart_tx uut (
         // Port mappings
     );
 
