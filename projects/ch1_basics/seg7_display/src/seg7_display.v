@@ -1,5 +1,3 @@
-`include "digit_to_7seg.v"
-
 module seg7_display (
     input clk,
     input reset,
